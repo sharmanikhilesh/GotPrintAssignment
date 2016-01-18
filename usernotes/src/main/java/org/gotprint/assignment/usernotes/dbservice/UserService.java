@@ -32,11 +32,11 @@ public class UserService {
 		session.saveOrUpdate(new UserEntity("three@three.com", "passthree", dt,dt));
 		session.getTransaction().commit();
 		
-		NoteEntity note = new NoteEntity("First Note", "Writing first note", dt, dt);
+		/*NoteEntity note = new NoteEntity("First Note", "Writing first note", dt, dt);
 		NoteEntity note2 = new NoteEntity("Sec Note", "Writing sec note", dt, dt);
 		NotesService nServe = new NotesService(); 
 		nServe.addNoteForUser("one@one.com", note);
-		nServe.addNoteForUser("one@one.com", note2);
+		nServe.addNoteForUser("one@one.com", note2);*/
 		session.close();
 	}
 	

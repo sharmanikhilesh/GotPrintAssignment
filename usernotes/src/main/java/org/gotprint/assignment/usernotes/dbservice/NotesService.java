@@ -63,24 +63,34 @@ public class NotesService {
 	
 	}
 	
-	public void removeNote(int noteID){
-		
-		Session session = sessionFactory.openSession();
+	public void verifyAndRemoveNote(String email, int noteID) {
+		Session session  = sessionFactory.openSession();
 		session.beginTransaction();
 		NoteEntity note = (NoteEntity) session.get(NoteEntity.class, noteID);
+		if(!email.equals(note.getUser().getEmail())){
+			session.close();
+		}
 		session.delete(note);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 	
-	public void updateNote(int noteID, NoteEntity newNote){
+	public void verifyAndUpdateNote(String email, int noteID, NoteEntity newNote){
+		
+	
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		NoteEntity note = (NoteEntity) session.get(NoteEntity.class, noteID);
+		if(!email.equals(note.getUser().getEmail())){
+			session.close();
+		}
+		note.setLastUpdateTime(new Date());
 		note.setNote(newNote.getNote());
 		session.update(note);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 
 }
