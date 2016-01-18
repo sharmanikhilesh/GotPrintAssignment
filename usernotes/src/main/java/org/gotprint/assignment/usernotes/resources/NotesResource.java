@@ -2,10 +2,12 @@ package org.gotprint.assignment.usernotes.resources;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -15,12 +17,13 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
-import org.gotprint.assignment.usernotes.dbservice.NotesService;
-import org.gotprint.assignment.usernotes.dbservice.UserService;
+import org.glassfish.jersey.internal.util.Base64;
+import org.gotprint.assignment.usernotes.authentication.Authenticator;
 import org.gotprint.assignment.usernotes.entity.NoteEntity;
 import org.gotprint.assignment.usernotes.entity.UserEntity;
 import org.gotprint.assignment.usernotes.model.Note;
-
+import org.gotprint.assignment.usernotes.dbservice.NotesService;
+import org.gotprint.assignment.usernotes.dbservice.UserService;
 
 
 @Path("users/{email}/notes")
@@ -29,21 +32,35 @@ import org.gotprint.assignment.usernotes.model.Note;
 public class NotesResource {
 	
 	private final String email;
+	private static final String AUTHORIZATION_HEADER_KEY = "Authorization"; 
+	
+	
 	private NotesService notesService;
 	
-	public NotesResource(@PathParam("email") String email) {
+	public NotesResource(){
+		this.notesService = new NotesService();
+		this.email = "";
+	}
+	
+	public NotesResource(@PathParam("email") String email, @HeaderParam(AUTHORIZATION_HEADER_KEY) String authValue) {
 		this.notesService = new NotesService();
 		this.email = email;
-		
+				
 		if(email==null){throw new WebApplicationException(Status.NOT_FOUND);}
+		
 		new UserService().createData();
+		
+		if(!Authenticator.authorizeUser(authValue, email))
+			throw new WebApplicationException(Status.UNAUTHORIZED);
+		
+		
 	}
 	
 	@GET
-	public List<Note> getAllNotesByUser(@PathParam("email") String email){
+	public List<Note> getAllNotesByUser(){
 		List<NoteEntity> noteEntityList = notesService.getAllNotesByUser(email);
 		List<Note> noteList = new ArrayList<Note>();
-		for (NoteEntity notes : noteEntityList) {			
+		for (NoteEntity notes : noteEntityList) {		
 			noteList.add(new Note(notes));
 		}
 		return noteList;
@@ -73,4 +90,5 @@ public class NotesResource {
 		newNote.setUser(user);
 		notesService.verifyAndUpdateNote(email, noteID, newNote);
 	}
+	
 }
