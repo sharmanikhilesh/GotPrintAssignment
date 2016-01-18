@@ -15,7 +15,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="note")
+@NamedQueries({
+	@NamedQuery(name="NoteEntity.byUserEmail", query="from NoteEntity where email = :email"),
+	@NamedQuery(name="NoteEntity.delete.byUserEmail", query="delete from NoteEntity where email = :email")
+})
 public class NoteEntity {
+	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int noteId;
@@ -28,6 +34,16 @@ public class NoteEntity {
 	@JoinColumn(name="email")
 	private UserEntity user;
 
+	public NoteEntity(){}
+	
+	public NoteEntity(String title, String note, Date createTime,
+			Date lastUpdateTime) {
+		super();
+		this.title = title;
+		this.note = note;
+		this.createTime = createTime;
+		this.lastUpdateTime = lastUpdateTime;
+	}
 	public int getNoteId() {
 		return noteId;
 	}
