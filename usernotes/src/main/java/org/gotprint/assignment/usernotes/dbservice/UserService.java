@@ -28,9 +28,9 @@ public class UserService {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Date dt = new Date();
-		session.saveOrUpdate(new UserEntity("one@one.com", "passone", dt,dt));
-		session.saveOrUpdate(new UserEntity("two@two.com", "passtwo", dt,dt));
-		session.saveOrUpdate(new UserEntity("three@three.com", "passthree", dt,dt));
+		session.saveOrUpdate(new UserEntity("one@one.com", "passwordone", dt,dt));
+		session.saveOrUpdate(new UserEntity("two@two.com", "passwordtwo", dt,dt));
+		session.saveOrUpdate(new UserEntity("three@three.com", "passwordthree", dt,dt));
 		session.getTransaction().commit();
 		
 		/*NoteEntity note = new NoteEntity("First Note", "Writing first note", dt, dt);

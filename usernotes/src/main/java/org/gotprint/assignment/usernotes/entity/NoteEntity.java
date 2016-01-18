@@ -2,6 +2,7 @@ package org.gotprint.assignment.usernotes.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,9 @@ public class NoteEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int noteId;
+	@Column(length=50)
 	private String title;
+	@Column(length=1000)
 	private String note;
 	private Date createTime;
 	private Date lastUpdateTime;

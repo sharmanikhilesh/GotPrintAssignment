@@ -55,8 +55,9 @@ public class NotesService {
 		UserEntity user = new UserEntity();
 		user.setEmail(email);
 		note.setUser(user);
-		note.setCreateTime(new Date());
-		note.setLastUpdateTime(new Date());
+		Date dt = new Date();
+		note.setCreateTime(dt);
+		note.setLastUpdateTime(dt);
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
@@ -128,6 +129,7 @@ public class NotesService {
 			}
 			note.setLastUpdateTime(new Date());
 			note.setNote(newNote.getNote());
+			note.setTitle(newNote.getTitle());
 			session.update(note);
 			session.getTransaction().commit();
 		} catch (HibernateException e) {
