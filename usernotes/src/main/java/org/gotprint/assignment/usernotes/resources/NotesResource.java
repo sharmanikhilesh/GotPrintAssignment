@@ -21,6 +21,8 @@ import org.glassfish.jersey.internal.util.Base64;
 import org.gotprint.assignment.usernotes.authentication.Authenticator;
 import org.gotprint.assignment.usernotes.entity.NoteEntity;
 import org.gotprint.assignment.usernotes.entity.UserEntity;
+import org.gotprint.assignment.usernotes.exception.UnauthorizedException;
+import org.gotprint.assignment.usernotes.model.LinkReference;
 import org.gotprint.assignment.usernotes.model.Note;
 import org.gotprint.assignment.usernotes.dbservice.NotesService;
 import org.gotprint.assignment.usernotes.dbservice.UserService;
@@ -51,7 +53,7 @@ public class NotesResource {
 		new UserService().createData();
 		
 		if(!Authenticator.authorizeUser(authValue, email))
-			throw new WebApplicationException(Status.UNAUTHORIZED);
+			throw new UnauthorizedException();
 		
 		
 	}
@@ -60,8 +62,11 @@ public class NotesResource {
 	public List<Note> getAllNotesByUser(){
 		List<NoteEntity> noteEntityList = notesService.getAllNotesByUser(email);
 		List<Note> noteList = new ArrayList<Note>();
-		for (NoteEntity notes : noteEntityList) {		
-			noteList.add(new Note(notes));
+		for (NoteEntity notes : noteEntityList) {
+			Note note = new Note(notes);
+			note.getLinks().add(new LinkReference("self", "/users/" + email + "/" + note.getNoteId()));
+			note.getLinks().add(new LinkReference("owner", "/users/" + email));	
+			noteList.add(note);
 		}
 		return noteList;
 	}

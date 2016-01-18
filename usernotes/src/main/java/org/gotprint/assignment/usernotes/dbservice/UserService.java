@@ -1,11 +1,13 @@
 package org.gotprint.assignment.usernotes.dbservice;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.gotprint.assignment.usernotes.entity.NoteEntity;
 import org.gotprint.assignment.usernotes.entity.UserEntity;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,8 +21,7 @@ public class UserService {
         sessionFactory = HibernateUtils.getSessionFactory();
     }
 	public UserService(){
-		setSessionFactory();
-		
+		setSessionFactory();		
 	}
 	
 	public void createData(){
@@ -41,19 +42,39 @@ public class UserService {
 	}
 	
 	public UserEntity getUserByEmail(String email){
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		UserEntity user = (UserEntity) session.get(UserEntity.class, email);
-		session.close();
+		Session session = null;
+		UserEntity user = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			user = (UserEntity) session.get(UserEntity.class, email);
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		finally{
+			if(session != null)
+				session.close();
+		}
 		return user;
 	}
 	
 	public List<UserEntity> getAllUsers(){
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		Query query = session.createQuery("from Message"); 
-		List<UserEntity> users = (List<UserEntity>) query.list();
-		session.close();
+		Session session = null;
+		List<UserEntity> users = new ArrayList<UserEntity>();
+		try{
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			Query query = session.createQuery("from Message"); 
+			users = (List<UserEntity>) query.list();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		finally{
+			if(session != null)
+				session.close();
+		}
 		System.out.println("Working.. 3");
 		return users;
 	}

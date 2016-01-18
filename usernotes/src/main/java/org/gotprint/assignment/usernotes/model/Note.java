@@ -13,6 +13,15 @@ package org.gotprint.assignment.usernotes.model;
 		private String note;
 		private Date createTime;
 		private Date lastUpdateTime;
+		private List<LinkReference> links = new ArrayList<LinkReference>();
+		
+		public List<LinkReference> getLinks() {
+			return links;
+		}
+
+		public void setLinks(List<LinkReference> links) {
+			this.links = links;
+		}
 		
 		public Note(){
 			
