@@ -33,4 +33,4 @@ jobs:
         app-name: 'usernotes'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_886f48fff5934846ab6486099bdba8c9 }}
-        package: '${{ github.workspace }}/usernotes/target/*.jar'
+        package: '${{ github.workspace }}/usernotes/target/*.war'
