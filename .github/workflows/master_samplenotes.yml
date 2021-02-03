@@ -9,6 +9,10 @@ on:
       - master
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: usernotes
+
 jobs:
   build-and-deploy:
     runs-on: windows-latest
@@ -30,4 +34,4 @@ jobs:
         app-name: 'samplenotes'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_0a181e76d70b4de084dea9d3a6fb8b98 }}
-        package: '${{ github.workspace }}/target/*.jar'
+        package: '${{ github.workspace }}/usernotes/target/*.war'
